@@ -49,7 +49,7 @@ class ReservaServiceTest extends TestCase
         $service->validarDisponibilidad($auto, '2026-11-10', '2026-11-05');
     }
 
-        public function test_no_crea_reserva_si_auto_no_esta_disponible(): void
+    public function test_no_crea_reserva_si_auto_no_esta_disponible(): void
     {
         $auto = Auto::create([
             'placa' => 'JKL-012',
