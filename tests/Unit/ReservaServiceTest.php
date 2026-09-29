@@ -48,4 +48,29 @@ class ReservaServiceTest extends TestCase
         $this->expectExceptionMessage('La fecha de fin debe ser posterior');
         $service->validarDisponibilidad($auto, '2026-11-10', '2026-11-05');
     }
+
+    public function test_no_crea_reserva_si_auto_no_esta_disponible(): void
+    {
+        $auto = Auto::create([
+            'placa' => 'JKL-012',
+            'marca' => 'Kia',
+            'modelo' => 'Rio',
+            'anio' => 2023,
+            'tarifa_diaria' => 110.00,
+            'estado' => 'mantenimiento',
+        ]);
+
+        $service = new ReservaService();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('El auto no está disponible');
+
+        $service->crearReserva([
+            'auto_id' => $auto->id,
+            'cliente_nombre' => 'María',
+            'cliente_dni' => '87654321',
+            'fecha_inicio' => '2026-12-01',
+            'fecha_fin' => '2026-12-05',
+        ]);
+    }
 }
