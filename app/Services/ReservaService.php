@@ -37,9 +37,14 @@ class ReservaService
         return round($dias * $auto->tarifa_diaria, 2);
     }
 
-    public function crearReserva(array $datos): Reserva
+       public function crearReserva(array $datos): Reserva
     {
         $auto = Auto::findOrFail($datos['auto_id']);
+
+        if ($auto->estado !== 'disponible') {
+            throw new InvalidArgumentException("El auto no está disponible (estado: {$auto->estado}).");
+        }
+
         $this->validarDisponibilidad($auto, $datos['fecha_inicio'], $datos['fecha_fin']);
         $datos['total'] = $this->calcularTotal($auto, $datos['fecha_inicio'], $datos['fecha_fin']);
         return Reserva::create($datos);
