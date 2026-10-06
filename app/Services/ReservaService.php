@@ -37,7 +37,7 @@ class ReservaService
         return round($dias * $auto->tarifa_diaria, 2);
     }
 
-       public function crearReserva(array $datos): Reserva
+    public function crearReserva(array $datos): Reserva
     {
         $auto = Auto::findOrFail($datos['auto_id']);
 
