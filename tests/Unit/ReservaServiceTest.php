@@ -13,6 +13,32 @@ class ReservaServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_rechaza_reserva_dentro_de_otra_existente(): void
+    {
+        $auto = Auto::create([
+            'placa' => 'SOL-001',
+            'marca' => 'Toyota',
+            'modelo' => 'Corolla',
+            'anio' => 2023,
+            'tarifa_diaria' => 150.00,
+        ]);
+
+        Reserva::create([
+            'auto_id' => $auto->id,
+            'cliente_nombre' => 'Cliente existente',
+            'cliente_dni' => '12345678',
+            'fecha_inicio' => '2026-11-10',
+            'fecha_fin' => '2026-11-20',
+            'total' => 1500.00,
+            'estado' => 'activa',
+        ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('El auto no está disponible');
+
+        (new ReservaService())->validarDisponibilidad($auto, '2026-11-12', '2026-11-15');
+    }
+
     public function test_no_permite_reservar_auto_no_disponible(): void
     {
         $auto = Auto::create(['placa' => 'ABC-123', 'marca' => 'Toyota', 'modelo' => 'Corolla', 'anio' => 2023, 'tarifa_diaria' => 150.00]);

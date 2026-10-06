@@ -16,10 +16,8 @@ class ReservaService
 
         $conflicto = Reserva::where('auto_id', $auto->id)
             ->where('estado', 'activa')
-            ->where(function ($query) use ($fechaInicio, $fechaFin) {
-                $query->whereBetween('fecha_inicio', [$fechaInicio, $fechaFin])
-                      ->orWhereBetween('fecha_fin', [$fechaInicio, $fechaFin]);
-            })
+            ->where('fecha_inicio', '<=', $fechaFin)
+            ->where('fecha_fin', '>=', $fechaInicio)
             ->exists();
 
         if ($conflicto) {
