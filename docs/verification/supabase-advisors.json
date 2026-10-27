@@ -1,0 +1,54 @@
+{
+  "security": {
+    "result": {
+      "lints": []
+    }
+  },
+  "performance": {
+    "result": {
+      "lints": [
+        {
+          "name": "unused_index",
+          "title": "Unused Index",
+          "level": "INFO",
+          "facing": "EXTERNAL",
+          "categories": [
+            "PERFORMANCE"
+          ],
+          "description": "Detects if an index has never been used and may be a candidate for removal.",
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+          "count": 3,
+          "findings": [
+            {
+              "detail": "Index \\`rental_reservas_owner_date\\` on table \\`public.rental_reservas\\` has not been used",
+              "metadata": {
+                "name": "rental_reservas",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-27T19:55:54.330Z"
+            },
+            {
+              "detail": "Index \\`rental_reservas_auto_owner\\` on table \\`public.rental_reservas\\` has not been used",
+              "metadata": {
+                "name": "rental_reservas",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-27T19:55:54.330Z"
+            },
+            {
+              "detail": "Index \\`rental_pagos_owner_date\\` on table \\`public.rental_pagos\\` has not been used",
+              "metadata": {
+                "name": "rental_pagos",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-27T19:55:54.330Z"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

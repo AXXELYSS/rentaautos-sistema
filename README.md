@@ -1,59 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Rentaautos
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de gestión de alquileres reescrito en **TypeScript + React**, con **Supabase** como backend: PostgreSQL, Auth, RLS y API de datos. Interfaz en español y precios en soles peruanos.
 
-## About Laravel
+**Para instalarlo y empezar a usarlo, sigue la [guía paso a paso para Windows](GUIA_USO.md).** Incluye los comandos, la configuración de Supabase y las soluciones a problemas comunes.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Ejecutar
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Requiere Node.js 22.14 o posterior y npm.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```powershell
+npm install
+npm run dev
+```
 
-## Learning Laravel
+Abre http://127.0.0.1:3000. La configuración del proyecto Supabase ya está en `.env.local` de esta copia. Este archivo está excluido de Git. En otra máquina, copia `.env.example` a `.env.local` y configura la **clave pública** de tu proyecto. Nunca uses una clave secreta ni `service_role` en variables `VITE_`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```powershell
+npm run check
+npm run build
+npm start
+npm test
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+`npm start` sirve la compilación local para revisión. Para publicar, sirve `dist/client` en un hosting estático y configura las URL de redirección de Auth en Supabase para el dominio elegido.
 
-## Laravel Sponsors
+## Usar la aplicación
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- La primera visita abre una demo con los cuatro vehículos originales y tres reservas ficticias. Puedes probar los formularios, búsquedas y cancelaciones. Los cambios de la demo viven en memoria y desaparecen al recargar.
+- Pulsa **Conectar mi oficina**, crea una cuenta, confirma el correo si Supabase lo solicita e inicia sesión. Los datos de la cuenta se guardan en Supabase.
+- Cada cuenta empieza con una oficina vacía. Agrega tus vehículos o pulsa **Cargar vehículos de ejemplo**. La demo del navegador no se importa automáticamente.
+- Crea reservas con nombre, DNI de ocho dígitos, auto y fechas. La cotización comprueba disponibilidad; PostgreSQL vuelve a validar y calcula el total al guardar.
+- Desde el detalle puedes editar una reserva antes de entregar el auto. Registra la entrega y la devolución con kilometraje, combustible y observaciones. La devolución finaliza el alquiler; cancelar libera el período antes de la entrega.
+- En **Pagos**, registra adelantos, cobros y reembolsos; consulta cobrado neto y saldo. El **Comprobante** se puede imprimir o guardar como PDF desde el navegador.
+- El resumen destaca devoluciones para hoy y atrasadas. Los mensajes de validación aparecen junto a cada campo.
+- Flota, reservas y clientes tienen búsqueda y exportación CSV. El calendario permite recorrer semanas y abrir una reserva.
 
-### Premium Partners
+## Reglas del negocio
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Precio = tarifa diaria × diferencia de días. Recojo y devolución son fechas ocupadas, de acuerdo con el proyecto original. Por ejemplo, una reserva del 10 al 13 cobra tres días e impide otra reserva del mismo auto que empiece el día 13. Se rechazan fechas invertidas, recojos pasados, DNI inválidos, placas duplicadas y vehículos en mantenimiento o alquiler externo.
 
-## Contributing
+La exclusión GiST de PostgreSQL protege las reservas activas contra solapamientos. Los totales enviados por el cliente se sustituyen por el cálculo de base de datos. RLS limita lecturas y escrituras a la cuenta propietaria; un cliente no puede cambiar el propietario de un auto ni acceder a la oficina de otra cuenta.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Supabase configurado
 
-## Code of Conduct
+Proyecto: `qexbfirzwpkmekdwmleo`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- MCP registrado y autenticado mediante OAuth.
+- Tres migraciones aplicadas: `rental_initial`, `rental_operations` y `rental_operations_hardening`. Tablas `rental_autos`, `rental_reservas`, `rental_pagos` y `rental_inspecciones`, protegidas con RLS.
+- Tipos TypeScript generados desde el esquema desplegado.
+- Clave pública configurada localmente. La autorización MCP administra el proyecto; la sesión de cada usuario de la aplicación se gestiona por separado con Supabase Auth.
 
-## Security Vulnerabilities
+Para un proyecto nuevo, aplica todos los archivos de `supabase/migrations/` en orden mediante Supabase CLI o el editor SQL. `supabase/tests/rental.sql` y `supabase/tests/operations.sql` verifican las reglas y RLS dentro de transacciones que terminan en ROLLBACK. No dejan usuarios ni datos de prueba.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Estructura
 
-## License
+```text
+client/
+  App.tsx                  Navegación, sesión y operaciones
+  components/             Formularios, detalle, pagos, comprobante y autenticación
+  components/Fleet.tsx     Calendario y lista de vehículos
+  components/ui.tsx        Diálogos, filtros y controles comunes
+  supabase.ts              Cliente tipado, consultas y errores
+  database.types.ts        Tipos del esquema real
+  domain.ts                Tipos, fechas, moneda y datos de demo
+  operations.ts            Reglas operativas de la demo
+  validation.ts            Validaciones compartidas por campo
+  export.ts                Exportación CSV
+  styles.css               Diseño responsive
+supabase/migrations/       Esquema versionado aplicado
+supabase/tests/            Pruebas SQL con rollback
+e2e/                      Pruebas Playwright de interfaz y conexión remota
+docs/                     Contexto, decisiones y evidencias
+legacy/laravel/           Código PHP original conservado
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+El código antiguo no participa en la nueva aplicación. Se conserva para consulta, junto con sus dependencias y configuración originales. No se encontró una base de datos con datos reales que importar; esta migración implementa las entidades y reglas presentes en el código.
+
+## Diseño y verificación
+
+Se aplicó **Taste Skill**, dirección Framed sheet, seed `657109794`. La tipografía IBM Plex Sans se sirve localmente. La identidad utiliza un marco gris verdoso y un calendario de ocupación por matrícula; no utiliza fotografías externas. Los autos de la tabla son ilustraciones SVG esquemáticas.
+
+Evidencias y límites de las comprobaciones: [docs/verification/RESULTADOS.md](docs/verification/RESULTADOS.md). El análisis del sistema original y las decisiones están en [docs/CONTEXTO.md](docs/CONTEXTO.md).
+
+## Segunda revisión
+
+Las seis mejoras de seguimiento están descritas en [docs/SEGUNDA-REVISION.md](docs/SEGUNDA-REVISION.md), con reglas, pruebas y casos de caja negra. Esta rama conserva la migración inicial a React/TypeScript y Supabase; el Laravel original permanece en `legacy/laravel`.
