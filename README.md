@@ -2,6 +2,8 @@
 
 Sistema de gestión de alquileres reescrito en **TypeScript + React**, con **Supabase** como backend: PostgreSQL, Auth, RLS y API de datos. Interfaz en español y precios en soles peruanos.
 
+**Para instalarlo y empezar a usarlo, sigue la [guía paso a paso para Windows](GUIA_USO.md).** Incluye los comandos, la configuración de Supabase y las soluciones a problemas comunes.
+
 ## Ejecutar
 
 Requiere Node.js 22.14 o posterior y npm.
